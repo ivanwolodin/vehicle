@@ -9,12 +9,12 @@ ENV to_working_dir /home/web_app
 ENV TZ=Europe/Moscow
 
 
-WORKDIR                                ${to_working_dir}
-# COPY .                               /$to_working_dir
-ADD hello.c                            $to_working_dir 
-ADD setup.py                           $to_working_dir 
-ADD getservertime.cpp                  $to_working_dir 
-ADD check.py                           $to_working_dir
+WORKDIR                 ${to_working_dir}
+# COPY .                /$to_working_dir
+ADD hello.c             $to_working_dir 
+ADD setup.py            $to_working_dir 
+ADD getservertime.cpp   $to_working_dir 
+ADD check.py            $to_working_dir
 
 
 RUN apt-get update   && apt-get install nano
