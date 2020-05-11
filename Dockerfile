@@ -14,7 +14,10 @@ WORKDIR                 ${to_working_dir}
 ADD hello.c             $to_working_dir 
 ADD setup.py            $to_working_dir 
 ADD getservertime.cpp   $to_working_dir 
-ADD check.py            $to_working_dir
+#ADD check.py            $to_working_dir
+ADD setup.py            $to_working_dir 
+ADD server_w.py         $to_working_dir 
+ADD client_w.py         $to_working_dir 
 
 
 RUN apt-get update   && apt-get install nano
@@ -24,6 +27,8 @@ RUN apt-get update   && apt-get install build-essential
 RUN apt-get update   && apt-get -y install libpython3.7-dev
 
 RUN python3 setup.py install
+RUN python -m pip install psutil
+RUN python -m pip install aiohttp
 
 
 # create user to not work as a root
