@@ -3,7 +3,11 @@ import os
 import psutil
 import aiohttp.web
 
-import Combinations # external module. it is working through docker
+try:
+    import Combinations # external module. it is working through docker
+except ImportError:
+    pass
+
 
 HOST = os.getenv('HOST', '0.0.0.0')
 PORT = int(os.getenv('PORT', 8080))
@@ -28,7 +32,10 @@ async def websocket_handler(request):
             elif msg.data == 'memory':
                 await ws.send_str('memory statistics: {}'.format(psutil.virtual_memory()))
             elif msg.data == 'servertime':
-                await ws.send_str(Combinations.getServerTime())
+                try:
+                    await ws.send_str(Combinations.getServerTime())
+                except:
+                    await ws.send_str('Not implemented')
             elif msg.data == 'cpu':
                 await ws.send_str('cpu load: {}'.format(psutil.cpu_percent()))
             else:
