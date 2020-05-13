@@ -6,7 +6,7 @@
 Далее, для запуска клиента:
     python client_w.py
 
-Порядок важен. Сначала серевер, потом клиент.
+Порядок важен. Сначала сервер, потом клиент.
 Запросы, которые поддерживаются:
     memory
     cpu
@@ -27,3 +27,27 @@
 
 
 Докер-образ проекта: https://hub.docker.com/repository/docker/ivanwolodin/vehicle
+
+---------------------------------------------------------------------------------------------------------------------
+
+A project that implements a service that provides information about server resource utilization on sockets that support asynchronous requests.
+
+To start the server:
+    python server_w.py
+
+Next, to launch the client:
+    python client_w.py
+
+Order is important. First the server, then the client.
+Requests from client that are supported:
+    memory
+    cpu
+    servertime - - - > only if a module written in C++ is built first (to do the following, execute: python setup.py install)
+
+Problems:
+    consoles on different machines (windows, *nix) have different behavior,
+    which is kind of unpleasant, so the output interrupting from from server
+    and sending a new request over the existing socket is not fully implemented in client.py.
+    On the windows console this works in cmd, on Ubuntu - is not done yet.
+
+Docker image of the project: https://hub.docker.com/repository/docker/ivanwolodin/vehicle
