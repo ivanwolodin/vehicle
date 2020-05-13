@@ -42,11 +42,11 @@ Order is important. First the server, then the client.
 Requests from client that are supported:
     memory
     cpu
-    servertime - - - > only if a module written in C++ is built first (to do the following, execute: python setup.py install)
+    servertime ---> only if a module written in C++ is built first (to do the following, execute: python setup.py install)
 
 Problems:
     consoles on different machines (windows, *nix) have different behavior,
-    which is kind of unpleasant, so the output interrupting from from server
+    which is kind of unpleasant, so the output interrupting from server
     and sending a new request over the existing socket is not fully implemented in client.py.
     On the windows console this works in cmd, on Ubuntu - is not done yet.
 
