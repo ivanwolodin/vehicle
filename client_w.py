@@ -1,5 +1,8 @@
 import asyncio
-import msvcrt
+try:
+    import msvcrt
+except ImportError:
+    pass
 import os
 # import sys
 
