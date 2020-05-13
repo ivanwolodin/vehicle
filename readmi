@@ -26,4 +26,4 @@
     На windows-консоли это работает, в cmd, на Ubuntu - пока не сделано.
 
 
-Докерфайл проекта: https://hub.docker.com/repository/docker/ivanwolodin/vehicle
+Докер-образ проекта: https://hub.docker.com/repository/docker/ivanwolodin/vehicle
