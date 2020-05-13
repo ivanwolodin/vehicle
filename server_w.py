@@ -46,6 +46,7 @@ async def websocket_handler(request):
                                websocket=ws)
 
     print('Websocket connection closed')
+    # print(resp)
     return ws
 
 
