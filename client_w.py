@@ -20,7 +20,9 @@ async def main():
         # вернется сюда к тому моменту, когда дойдет до await в функции  prompt_and_send(ws)
         await prompt_and_send(ws)
 
-        async for msg in ws:  # асинхронный цикл
+        # асинхронный цикл, итерируемся, так как после выполнения функции ws.send_str(new_msg_to_send)
+        # сервер обязательно отправит ответ
+        async for msg in ws:
             print('Message received from server:', msg)
             """ 
             тут снова остановится. Вернёт контекст и продолжит выполнение после того 
@@ -29,6 +31,9 @@ async def main():
             """
             await prompt_and_send(ws)  # то есть, остановится на этой строчке
 
+            # если сервер вернул какую-то ошибку в сообщении или закрылся,
+            # то сработает break, мы выйдем из цикла
+            # и асинхронный менеджер контекста закроет сессию
             if msg.type in (aiohttp.WSMsgType.CLOSED,
                             aiohttp.WSMsgType.ERROR):
                 break
