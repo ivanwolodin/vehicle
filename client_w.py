@@ -82,11 +82,13 @@ async def main_v2():
                                  raw_data=new_msg_to_send)
         async for msg in ws:
             print('Message received from server:', msg)
-            if msvcrt.kbhit():
-                new_msg_to_send = input('Type a message to send to the server: ')
+            try:
+                if msvcrt.kbhit():
+                    new_msg_to_send = input('Type a message to send to the server: ')
+                    await prompt_and_send_v2(ws=ws,
+                                             raw_data=new_msg_to_send)
+            except:
                 await prompt_and_send_v2(ws=ws,
-                                         raw_data=new_msg_to_send)
-            await prompt_and_send_v2(ws=ws,
                                      raw_data=new_msg_to_send)
 
             if msg.type in (aiohttp.WSMsgType.CLOSED,

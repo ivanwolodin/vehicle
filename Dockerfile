@@ -29,6 +29,8 @@ RUN apt-get update   && apt-get -y install libpython3.7-dev
 RUN python3 setup.py install
 RUN python -m pip install psutil
 RUN python -m pip install aiohttp
+# RUN python -m pip install termios
+# RUN python -m pip install fcntl
 
 
 # create user to not work as a root
