@@ -1,5 +1,7 @@
 import asyncio
+import msvcrt
 import os
+# import sys
 
 import aiohttp
 
@@ -48,6 +50,50 @@ async def prompt_and_send(ws):
     await ws.send_str(new_msg_to_send)
 
 
+async def prompt_and_send_v2(ws, raw_data):
+    message, timeout = prepare_data(raw_data)
+    # message = raw_data
+    if message == 'exit':
+        print('Exiting!')
+        raise SystemExit(0)
+    await asyncio.sleep(timeout)
+    await ws.send_str(message)
+
+
+def prepare_data(raw_input):
+    if len(raw_input.split('-')) == 2:
+        message, timeout = raw_input.split('-')
+    elif len(raw_input.split('_')) == 2:
+        message, timeout = raw_input.split('_')
+    else:
+        message = raw_input
+        timeout = 3
+    # print(message, int(timeout))
+    return message, int(timeout)
+
+
+async def main_v2():
+    session = aiohttp.ClientSession()
+
+    async with session.ws_connect(URL) as ws:
+        new_msg_to_send = input('Type a message to send to the server: ')
+
+        await prompt_and_send_v2(ws=ws,
+                                 raw_data=new_msg_to_send)
+        async for msg in ws:
+            print('Message received from server:', msg)
+            if msvcrt.kbhit():
+                new_msg_to_send = input('Type a message to send to the server: ')
+                await prompt_and_send_v2(ws=ws,
+                                         raw_data=new_msg_to_send)
+            await prompt_and_send_v2(ws=ws,
+                                     raw_data=new_msg_to_send)
+
+            if msg.type in (aiohttp.WSMsgType.CLOSED,
+                            aiohttp.WSMsgType.ERROR):
+                break
+
+
 if __name__ == '__main__':
     print('Type "exit" to quit')      # просто информационное сообщение
 
@@ -57,8 +103,10 @@ if __name__ == '__main__':
        пока снова не дойдет до конструкции await some_function().
        После этого вернется к предыдущему await prompt_and_send() и продолжит выполнение 
        до следующего await
+    
     """
     loop = asyncio.get_event_loop()
 
     """Здесь запускаем всю капусту"""
-    loop.run_until_complete(main())
+    # loop.run_until_complete(main())
+    loop.run_until_complete(main_v2())
