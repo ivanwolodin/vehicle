@@ -19,6 +19,7 @@ async def testhandle(request):
 
 async def send_message(message, websocket):
     if message == 'close':
+        # отпустили контекст и вернулся туда, откуда нас вызвали
         await websocket.close()
     elif message == 'memory':
         await websocket.send_str('memory statistics: {}'.format(psutil.virtual_memory()))
@@ -35,15 +36,23 @@ async def send_message(message, websocket):
 
 async def websocket_handler(request):
     print('Websocket connection starting')
-    ws = aiohttp.web.WebSocketResponse()
-    await ws.prepare(request)
-    print('Websocket connection ready')
+    ws = aiohttp.web.WebSocketResponse()  # создается сокет
+    await ws.prepare(request)  # корутина ожидает соединения
 
-    async for msg in ws:
+    # после установления соединения печается
+    print('Websocket connection ready')  # и объект ws является объектом связывающим клиента и сервера
+
+    async for msg in ws:  # что-то пришло от клиента
         print(msg)
         if msg.type == aiohttp.WSMsgType.TEXT:
+            """вызываем другую корутину и идем в ней до wait function()
+               await работает только с awatable-объектами, 
+               соответственно внутри function() тоже должен быть await
+            
+            """
             await send_message(message=msg.data,
-                               websocket=ws)
+                               websocket=ws)  # доходим до сюда, и останавливаемся, ждем, пока в send_message()
+                                              # не "докрутимся" до await, после этого, вернемся сюда
 
     print('Websocket connection closed')
     # print(resp)
