@@ -17,6 +17,22 @@ async def testhandle(request):
     return aiohttp.web.Response(text='Test handle')
 
 
+async def send_message(message, websocket):
+    if message == 'close':
+        await websocket.close()
+    elif message == 'memory':
+        await websocket.send_str('memory statistics: {}'.format(psutil.virtual_memory()))
+    elif message == 'cpu':
+        await websocket.send_str('cpu load: {}'.format(psutil.cpu_percent()))
+    elif message == 'servertime':
+        try:
+            await websocket.send_str(Combinations.getServerTime())
+        except:
+            await websocket.send_str('Function implemented, but not properly installed')
+    else:
+        await websocket.send_str(message + '/function is not implemented')
+
+
 async def websocket_handler(request):
     print('Websocket connection starting')
     ws = aiohttp.web.WebSocketResponse()
@@ -26,28 +42,16 @@ async def websocket_handler(request):
     async for msg in ws:
         print(msg)
         if msg.type == aiohttp.WSMsgType.TEXT:
-            print(msg.data)
-            if msg.data == 'close':
-                await ws.close()
-            elif msg.data == 'memory':
-                await ws.send_str('memory statistics: {}'.format(psutil.virtual_memory()))
-            elif msg.data == 'servertime':
-                try:
-                    await ws.send_str(Combinations.getServerTime())
-                except:
-                    await ws.send_str('Not implemented')
-            elif msg.data == 'cpu':
-                await ws.send_str('cpu load: {}'.format(psutil.cpu_percent()))
-            else:
-                await ws.send_str(msg.data + '/function is not implemented')
+            await send_message(message=msg.data,
+                               websocket=ws)
 
     print('Websocket connection closed')
     return ws
 
 
 def main():
-    loop = asyncio.get_event_loop()
-    app = aiohttp.web.Application(loop=loop)
+    # loop = asyncio.get_event_loop()
+    app = aiohttp.web.Application()
     app.router.add_route('GET', '/', testhandle)
     app.router.add_route('GET', '/ws', websocket_handler)
     aiohttp.web.run_app(app, host=HOST, port=PORT)
