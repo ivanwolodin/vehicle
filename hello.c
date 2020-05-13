@@ -1,4 +1,3 @@
-
 #include <Python.h>
 
 static PyObject* uniqueCombinations(PyObject* self)

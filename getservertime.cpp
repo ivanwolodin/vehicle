@@ -7,7 +7,6 @@
 #include <sstream>
 
 
-
 static PyObject* uniqueCombinations(PyObject* self)
 {
     return Py_BuildValue("s", "uniqueCombinations() return value (is of type 'string')");
